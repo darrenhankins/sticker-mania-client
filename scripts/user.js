@@ -4,7 +4,9 @@ $(document).ready(function() {
   const params = parseQuery(window.location.search);
 
   getUserInfo(params.id)
-    .then(addUserInfoToPage);
+    .then(addUserInfoToPage)
+    .then(getStickers)
+    .then(addStickers);
 });
 
 
@@ -29,6 +31,19 @@ function parseQuery(query) {
 function getUserInfo(id) {
   return $.get(`${API_URL}/user/${id}`);
 }
+
+function getStickers(id) {
+  return $.get(`${API_URL}/user/${id}/sticker`);
+}
+
+function addStickers(stickers){
+  let source = $('#sticker-template').html();
+  let template = Handlebars.compile(source);
+  let context = {stickers}; // {stickers:stickers} is the same
+  let html = template(context);
+  $('.stickers').html(html);
+}
+
 
 function addUserInfoToPage(user) {
   let source = $('#user-template').html();
